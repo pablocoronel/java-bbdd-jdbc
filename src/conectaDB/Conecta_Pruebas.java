@@ -37,6 +37,12 @@ public class Conecta_Pruebas {
 				String codigo_articulo = mi_resulset.getString("CÓDIGOARTÍCULO");
 				String precio = mi_resulset.getString("PRECIO");
 
+				// si fuera un campo double
+				// double precio_2 = mi_resulset.getDouble("PRECIO_");
+
+				// si fuera un campo de tipo fecha
+				// Date fecha = mi_resulset.getDate("FECHA");
+
 				System.out.println(nombre_articulo + " " + codigo_articulo + " " + precio);
 			}
 		} catch (SQLException e) {

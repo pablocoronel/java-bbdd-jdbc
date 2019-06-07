@@ -5,3 +5,4 @@ Package conectaDB:
 202: Acceso a BBDD JDBC II => Conecta_Pruebas.java
 203: Acceso a BBDD JDBC III => Conecta_Pruebas.java
 204: Acceso a BBDD JDBC IV => Modifica_BBDD.java
+205: Acceso a BBDD. JDBC V. Consultas Preparadas. => Consulta_Preparada.java

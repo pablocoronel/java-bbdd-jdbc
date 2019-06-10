@@ -3,6 +3,8 @@ package conectaDB;
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class Aplicacion_Consulta {
@@ -25,6 +27,13 @@ class Marco_Aplicacion extends JFrame {
 	private JComboBox<String> paises;
 	private JTextArea resultado;
 
+	private Connection conexion_BD;
+	private PreparedStatement enviaConsultaSeccion;
+
+	private final String consultaSeccion = "SELECT NOMBRE_ARTÍCULO, SECCIÓN, PRECIO, PAÍS_DE_ORIGEN "
+			+ "FROM productos WHERE SECCIÓN = ?";
+
+	// constructor
 	public Marco_Aplicacion() {
 
 		setTitle("Consulta BBDD");
@@ -65,6 +74,15 @@ class Marco_Aplicacion extends JFrame {
 
 		JButton botonConsulta = new JButton("Consulta");
 
+		botonConsulta.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				ejecutaConsulta();
+			}
+		});
+
 		add(botonConsulta, BorderLayout.SOUTH);
 
 		/**
@@ -75,10 +93,10 @@ class Marco_Aplicacion extends JFrame {
 		String password = "";
 		try {
 			// conexion
-			Connection conexion_BD = DriverManager.getConnection(url, user, password);
+			this.conexion_BD = DriverManager.getConnection(url, user, password);
 
 			// statement
-			Statement statement = conexion_BD.createStatement();
+			Statement statement = this.conexion_BD.createStatement();
 
 			// consulta SECCIONES
 			String sql = "SELECT DISTINCT SECCIÓN FROM productos";
@@ -103,6 +121,43 @@ class Marco_Aplicacion extends JFrame {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+
+	}
+
+	// ejecuta la consulta filtrada
+	private void ejecutaConsulta() {
+		ResultSet rs = null;
+
+		try {
+			// obtiene la seccion elegida
+			String seccion = (String) this.secciones.getSelectedItem();
+
+			// la conexion recibe la consulta parametrizada
+			enviaConsultaSeccion = this.conexion_BD.prepareStatement(this.consultaSeccion);
+
+			// a la sentencia se le agrega el parametro
+			enviaConsultaSeccion.setString(1, seccion);
+
+			// ejecucion
+			rs = enviaConsultaSeccion.executeQuery();
+
+			// recorrido para mostrar los datos
+			while (rs.next()) {
+				this.resultado.append(rs.getString(1));
+				this.resultado.append(", ");
+
+				this.resultado.append(rs.getString(2));
+				this.resultado.append(", ");
+
+				this.resultado.append(rs.getString(3));
+				this.resultado.append(", ");
+
+				this.resultado.append(rs.getString(4));
+				this.resultado.append("\n");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 
 	}

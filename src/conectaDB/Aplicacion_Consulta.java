@@ -28,10 +28,18 @@ class Marco_Aplicacion extends JFrame {
 	private JTextArea resultado;
 
 	private Connection conexion_BD;
-	private PreparedStatement enviaConsultaSeccion;
 
+	private PreparedStatement enviaConsultaSeccion;
 	private final String consultaSeccion = "SELECT NOMBRE_ARTÍCULO, SECCIÓN, PRECIO, PAÍS_DE_ORIGEN "
 			+ "FROM productos WHERE SECCIÓN = ?";
+
+	private PreparedStatement enviaConsultaPais;
+	private final String consultaPais = "SELECT NOMBRE_ARTÍCULO, SECCIÓN, PRECIO, PAÍS_DE_ORIGEN "
+			+ "FROM productos WHERE PAÍS_DE_ORIGEN = ?";
+
+	private PreparedStatement enviaConsultaTodos;
+	private final String consultaTodos = "SELECT NOMBRE_ARTÍCULO, SECCIÓN, PRECIO, PAÍS_DE_ORIGEN "
+			+ "FROM productos WHERE SECCIÓN = ? AND PAÍS_DE_ORIGEN = ?";
 
 	// constructor
 	public Marco_Aplicacion() {
@@ -130,17 +138,43 @@ class Marco_Aplicacion extends JFrame {
 		ResultSet rs = null;
 
 		try {
+			// pone en blanco los registros acumulados de antes
+			this.resultado.setText("");
+
 			// obtiene la seccion elegida
 			String seccion = (String) this.secciones.getSelectedItem();
 
-			// la conexion recibe la consulta parametrizada
-			enviaConsultaSeccion = this.conexion_BD.prepareStatement(this.consultaSeccion);
+			// obtiene el pais elegido
+			String pais = (String) this.paises.getSelectedItem();
 
-			// a la sentencia se le agrega el parametro
-			enviaConsultaSeccion.setString(1, seccion);
+			/**
+			 * la conexion recibe la consulta parametrizada
+			 */
+			if (!seccion.equals("Todos") && pais.equals("Todos")) {
+				// seccion
+				this.enviaConsultaSeccion = this.conexion_BD.prepareStatement(this.consultaSeccion);
 
-			// ejecucion
-			rs = enviaConsultaSeccion.executeQuery();
+				// a la sentencia se le agrega el parametro
+				this.enviaConsultaSeccion.setString(1, seccion);
+
+				// ejecucion
+				rs = this.enviaConsultaSeccion.executeQuery();
+
+			} else if (seccion.equals("Todos") && !pais.equals("Todos")) {
+				// pais
+				this.enviaConsultaPais = this.conexion_BD.prepareStatement(this.consultaPais);
+				this.enviaConsultaPais.setString(1, pais);
+				rs = this.enviaConsultaPais.executeQuery();
+
+			} else if (!seccion.equals("Todos") && !pais.equals("Todos")) {
+				// todos
+				this.enviaConsultaTodos = this.conexion_BD.prepareStatement(consultaTodos);
+
+				this.enviaConsultaTodos.setString(1, seccion);
+				this.enviaConsultaTodos.setString(2, pais);
+
+				rs = this.enviaConsultaTodos.executeQuery();
+			}
 
 			// recorrido para mostrar los datos
 			while (rs.next()) {

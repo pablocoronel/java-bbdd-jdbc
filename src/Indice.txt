@@ -22,3 +22,6 @@ Package transacciones
 Package metadatos
 222: Acceso a BBDD JDBC XXII. Metadatos I => Info_Metadatos.java
 223: Acceso a BBDD JDBC XXIII. Metadatos II => Info_Metadatos.java
+
+Package aplicacion_final
+224: Acceso a BBDD JDBC XXIV. Ejercicio práctico I => AplicacionUniversal.java

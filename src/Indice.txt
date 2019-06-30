@@ -25,3 +25,4 @@ Package metadatos
 
 Package aplicacion_final
 224: Acceso a BBDD JDBC XXIV. Ejercicio práctico I => AplicacionUniversal.java
+225: Acceso a BBDD JDBC XXV. Ejercicio práctico II => AplicacionUniversal.java

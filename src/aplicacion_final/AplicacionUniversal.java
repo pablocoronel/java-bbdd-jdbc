@@ -1,7 +1,10 @@
 package aplicacion_final;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -49,12 +52,59 @@ class LaminaBBDD extends JPanel {
 
 		add(areaInformacion, BorderLayout.CENTER);
 
-		add(comboTablas, BorderLayout.NORTH);
-
 		// conectar a la BD y cargarlo en el combo box
 		conectarBBDD();
 		getTablas();
 
+		// evento para ver el contenido de las tablas en pantall
+		comboTablas.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String nombre_tabla = (String) comboTablas.getSelectedItem();
+
+				mostrarInfoTabla(nombre_tabla);
+			}
+		});
+
+		add(comboTablas, BorderLayout.NORTH);
+
+	}
+
+	protected void mostrarInfoTabla(String nombre_tabla) {
+		// listado del nombre de campos de la tabla
+		ArrayList<String> campos = new ArrayList<String>();
+
+		String consulta = "SELECT * FROM " + nombre_tabla;
+
+		try {
+			// limpiar la pantalla
+			areaInformacion.setText("");
+
+			Statement mi_statement = mi_conexion.createStatement();
+			ResultSet rs = mi_statement.executeQuery(consulta);
+
+			// metadatos
+			ResultSetMetaData rs_BBDD = rs.getMetaData();
+
+			// agrega cada nombre de campo
+			for (int i = 1; i < rs_BBDD.getColumnCount(); i++) {
+				campos.add(rs_BBDD.getColumnLabel(i));
+			}
+
+			// recorrer el resultset de datos
+			while (rs.next()) {
+				// agrega el value de cada campo segun su nombre
+				for (String cada_campo : campos) {
+					areaInformacion.append(rs.getString(cada_campo) + " ");
+				}
+
+				areaInformacion.append("\n");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	// conectar a la bd

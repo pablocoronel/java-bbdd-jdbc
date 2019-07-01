@@ -3,8 +3,10 @@ package aplicacion_final;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.*;
 
@@ -41,6 +43,7 @@ class LaminaBBDD extends JPanel {
 	private JComboBox comboTablas;
 	private JTextArea areaInformacion;
 	private Connection mi_conexion;
+	private FileReader entrada;
 
 	public LaminaBBDD() {
 
@@ -111,10 +114,28 @@ class LaminaBBDD extends JPanel {
 	public void conectarBBDD() {
 		this.mi_conexion = null;
 
-		try {
-			this.mi_conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc_curso_sql", "root", "");
+		String[] datos = new String[3];
 
-		} catch (Exception e) {
+		try {
+			// levantar el archivo de texto con la configuracion
+			// flujo de entrada
+			entrada = new FileReader("C:/Users/Usuario/eclipse-workspace/BBDD_JDBC/configuracion_BD.txt");
+
+			// buffer que recibe un flujo de entrada
+			BufferedReader mi_buffer = new BufferedReader(entrada);
+
+			for (int i = 0; i <= 2; i++) {
+				datos[i] = mi_buffer.readLine();
+			}
+
+			this.mi_conexion = DriverManager.getConnection(datos[0], datos[1], datos[2]);
+
+			// cieere del flujo
+			entrada.close();
+		} catch (IOException e) {
+			// el this hace referencia al componente padre
+			JOptionPane.showMessageDialog(this, "No se ha encontrado el archivo de conexión");
+		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}

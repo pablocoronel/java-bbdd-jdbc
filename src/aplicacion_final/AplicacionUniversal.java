@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class AplicacionUniversal {
 
@@ -120,6 +121,30 @@ class LaminaBBDD extends JPanel {
 			// levantar el archivo de texto con la configuracion
 			// flujo de entrada
 			entrada = new FileReader("C:/Users/Usuario/eclipse-workspace/BBDD_JDBC/configuracion_BD.txt");
+		} catch (IOException e) {
+			// si no encuentra la ruta del archivo
+			// el this hace referencia al componente padre
+			JOptionPane.showMessageDialog(this, "No se ha encontrado el archivo de conexión");
+
+			// select de archivos
+			JFileChooser chooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto", "txt");
+
+			chooser.setFileFilter(filter);
+			int returnVal = chooser.showOpenDialog(this);
+
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				try {
+					entrada = new FileReader(chooser.getSelectedFile().getAbsolutePath());
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		}
+
+		try {
 
 			// buffer que recibe un flujo de entrada
 			BufferedReader mi_buffer = new BufferedReader(entrada);
@@ -132,13 +157,10 @@ class LaminaBBDD extends JPanel {
 
 			// cieere del flujo
 			entrada.close();
-		} catch (IOException e) {
-			// el this hace referencia al componente padre
-			JOptionPane.showMessageDialog(this, "No se ha encontrado el archivo de conexión");
-		} catch (SQLException e) {
-			// TODO: handle exception
+		} catch (IOException | SQLException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	// obtener tablas de la BD

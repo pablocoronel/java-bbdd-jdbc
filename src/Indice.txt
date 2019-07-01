@@ -27,3 +27,4 @@ Package aplicacion_final
 224: Acceso a BBDD JDBC XXIV. Ejercicio práctico I => AplicacionUniversal.java
 225: Acceso a BBDD JDBC XXV. Ejercicio práctico II => AplicacionUniversal.java
 226: Acceso a BBDD JDBC XXVI. Ejercicio práctico III => AplicacionUniversal.java
+227: Acceso a BBDD JDBC XXVII Ejercicio práctico IV => AplicacionUniversal.java
